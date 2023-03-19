@@ -8,17 +8,17 @@
     nixpkgs,
   }: let
     pkgs = import nixpkgs {system = "x86_64-linux";};
-    esp32c3 = pkgs.dockerTools.pullImage {
+    esp32 = pkgs.dockerTools.pullImage {
       imageName = "espressif/idf-rust";
-      imageDigest = "sha256:b6a140daf574401a0846c1f20a90b258ec4e68378cfc0ad6f509b34f27cb6da8";
-      sha256 = "fYmZE14K0RnsbJLhOkv63grTBiuDd3xdIIsM7PipNMA=";
+      imageDigest = "sha256:4d6ca6c1764225eb07374fb3c0584696bf0e9483abf04d075db27b60bc3e3d49";
+      sha256 = "Y8l8B73V+4neNaL3tk0cHkDYW4bWOgTjIRO2fD4Kacw=";
       finalImageName = "espressif/idf-rust";
-      finalImageTag = "esp32c3_latest";
+      finalImageTag = "all_latest";
     };
     extractDocker = image:
       pkgs.vmTools.runInLinuxVM (
         pkgs.runCommand "docker-preload-image" {
-          memSize = 20 * 1024;
+          memSize = 32 * 1024;
           buildInputs = [
             pkgs.curl
             pkgs.kmod
@@ -60,17 +60,17 @@
         ''
       );
   in {
-    packages.x86_64-linux.esp32c3 = pkgs.stdenv.mkDerivation {
-      name = "esp32c3";
-      src = extractDocker esp32c3;
+    packages.x86_64-linux.esp32 = pkgs.stdenv.mkDerivation {
+      name = "esp32";
+      src = extractDocker esp32;
       nativeBuildInputs = [
         pkgs.autoPatchelfHook
       ];
       buildInputs = [
-        pkgs.stdenv.cc.cc
         pkgs.zlib
         pkgs.libxml2
         pkgs.python2
+        pkgs.stdenv.cc.cc
       ];
       buildPhase = "true";
       installPhase = ''
