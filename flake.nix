@@ -11,14 +11,14 @@
     esp32c3 = pkgs.dockerTools.pullImage {
       imageName = "espressif/idf-rust";
       imageDigest = "sha256:b6a140daf574401a0846c1f20a90b258ec4e68378cfc0ad6f509b34f27cb6da8";
-      sha256 = "";
-      finalImageName = "espressif/idf-rust:esp32c3_latest";
+      sha256 = "fYmZE14K0RnsbJLhOkv63grTBiuDd3xdIIsM7PipNMA=";
+      finalImageName = "espressif/idf-rust";
       finalImageTag = "esp32c3_latest";
     };
     extractDocker = image:
       pkgs.vmTools.runInLinuxVM (
         pkgs.runCommand "docker-preload-image" {
-          memSize = 8 * 1024;
+          memSize = 20 * 1024;
           buildInputs = [
             pkgs.curl
             pkgs.kmod
@@ -53,7 +53,7 @@
           docker load -i ${image}
 
           echo run image
-          docker run ${image.destNameTag} tar -C /opt/devkitpro -c . | tar -xv --no-same-owner -C $out || true
+          docker run ${image.destNameTag} tar -C /home/esp/.rustup/toolchains -c . | tar -xv --no-same-owner -C $out || true
 
           echo end
           kill %1
@@ -68,13 +68,14 @@
       ];
       buildInputs = [
         pkgs.stdenv.cc.cc
-        pkgs.ncurses6
-        pkgs.zsnes
+        pkgs.zlib
+        pkgs.libxml2
+        pkgs.python2
       ];
       buildPhase = "true";
       installPhase = ''
         mkdir -p $out
-        cp -r $src/* $out
+        cp -r $src $out
       '';
     };
   };
