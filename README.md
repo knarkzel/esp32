@@ -6,10 +6,10 @@ Rust with Xtensa support for Nix using flakes.
 $ nix flake show github:knarkzel/esp32
 └───packages
     └───x86_64-linux
-        └───esp32c3: package 'esp32c3'
-$ nix build github:knarkzel/esp32#esp32c3
-$ ls result
-esp  nightly-x86_64-unknown-linux-gnu
+        └───esp32: package 'esp32'
+$ nix build github:knarkzel/esp32#esp32
+$ ls -a result
+.  ..  .cargo  .rustup
 ```
 
 ## Minimal example
@@ -39,3 +39,7 @@ esp  nightly-x86_64-unknown-linux-gnu
   };
 }
 ```
+
+## Notes
+
+When building from source, you need a huge amount of memory, about 36 GB.

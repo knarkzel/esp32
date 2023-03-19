@@ -18,7 +18,7 @@
     extractDocker = image:
       pkgs.vmTools.runInLinuxVM (
         pkgs.runCommand "docker-preload-image" {
-          memSize = 32 * 1024;
+          memSize = 36 * 1024;
           buildInputs = [
             pkgs.curl
             pkgs.kmod
@@ -67,15 +67,18 @@
         pkgs.autoPatchelfHook
       ];
       buildInputs = [
+        pkgs.xz
         pkgs.zlib
         pkgs.libxml2
         pkgs.python2
+        pkgs.libudev-zero
         pkgs.stdenv.cc.cc
       ];
       buildPhase = "true";
       installPhase = ''
         mkdir -p $out
-        cp -r $src/.rustup/toolchains $out
+        cp -r $src/.cargo $out
+        cp -r $src/.rustup $out
       '';
     };
   };
