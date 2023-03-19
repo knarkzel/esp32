@@ -53,7 +53,7 @@
           docker load -i ${image}
 
           echo run image
-          docker run ${image.destNameTag} tar -C /home/esp/.rustup/toolchains -c . | tar -xv --no-same-owner -C $out || true
+          docker run ${image.destNameTag} tar -C /home/esp -c . | tar -xv --no-same-owner -C $out || true
 
           echo end
           kill %1
@@ -75,7 +75,7 @@
       buildPhase = "true";
       installPhase = ''
         mkdir -p $out
-        cp -r $src/* $out
+        cp -r $src/.rustup/toolchains $out
       '';
     };
   };
