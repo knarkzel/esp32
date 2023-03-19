@@ -75,7 +75,7 @@
       buildPhase = "true";
       installPhase = ''
         mkdir -p $out
-        cp -r $src $out
+        cp -r $src/* $out
       '';
     };
   };
