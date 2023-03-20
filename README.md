@@ -46,6 +46,10 @@ $ ls -a result
 }
 ```
 
+## Getting started
+
+Use the above flake, then follow the [Rust on ESP Book](https://esp-rs.github.io/book/writing-your-own-application/generate-project-from-template.html).
+
 ## Notes
 
 When building from source, you need a huge amount of memory, about 36 GB.
