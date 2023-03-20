@@ -60,8 +60,8 @@
         ''
       );
   in {
-    packages.x86_64-linux.esp32 = pkgs.stdenv.mkDerivation {
-      name = "esp32";
+    packages.x86_64-linux.rust = pkgs.stdenv.mkDerivation {
+      name = "rust";
       src = extractDocker esp32;
       nativeBuildInputs = [
         pkgs.autoPatchelfHook
