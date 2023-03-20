@@ -49,3 +49,8 @@ $ ls -a result
 ## Notes
 
 When building from source, you need a huge amount of memory, about 36 GB.
+To create temporary swap, use following commands:
+
+```
+$ fallocate -l 36G /tmp/swap; mkswap /tmp/swap; swapon /tmp/swap
+```
