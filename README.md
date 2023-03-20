@@ -30,11 +30,17 @@ $ ls -a result
     esp32,
   }: let
     pkgs = import nixpkgs {system = "x86_64-linux";};
+    idf-rust = esp32.packages.x86_64-linux.esp32;
   in {
     devShells.x86_64-linux.default = pkgs.mkShell {
       buildInputs = [
-        esp32.packages.x86_64-linux.esp32
+        idf-rust
       ];
+
+      shellHook = ''
+        export PATH="${idf-rust}/.rustup/toolchains/esp/bin:$PATH"
+        export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+      '';
     };
   };
 }
