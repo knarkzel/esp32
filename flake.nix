@@ -7,7 +7,7 @@
     self,
     nixpkgs,
   }: let
-    pkgs = import nixpkgs {system = "x86_64-linux";};
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
     esp32 = pkgs.dockerTools.pullImage {
       imageName = "espressif/idf-rust";
       imageDigest = "sha256:4d6ca6c1764225eb07374fb3c0584696bf0e9483abf04d075db27b60bc3e3d49";
@@ -15,56 +15,18 @@
       finalImageName = "espressif/idf-rust";
       finalImageTag = "all_latest";
     };
-    extractDocker = image:
-      pkgs.vmTools.runInLinuxVM (
-        pkgs.runCommand "docker-preload-image" {
-          memSize = 36 * 1024;
-          buildInputs = [
-            pkgs.curl
-            pkgs.kmod
-            pkgs.docker
-            pkgs.e2fsprogs
-            pkgs.utillinux
-          ];
-        }
-        ''
-          modprobe overlay
-
-          # from https://github.com/tianon/cgroupfs-mount/blob/master/cgroupfs-mount
-          mount -t tmpfs -o uid=0,gid=0,mode=0755 cgroup /sys/fs/cgroup
-          cd /sys/fs/cgroup
-          for sys in $(awk '!/^#/ { if ($4 == 1) print $1 }' /proc/cgroups); do
-            mkdir -p $sys
-            if ! mountpoint -q $sys; then
-              if ! mount -n -t cgroup -o $sys cgroup $sys; then
-                rmdir $sys || true
-              fi
-            fi
-          done
-
-          dockerd -H tcp://127.0.0.1:5555 -H unix:///var/run/docker.sock &
-
-          until $(curl --output /dev/null --silent --connect-timeout 2 http://127.0.0.1:5555); do
-            printf '.'
-            sleep 1
-          done
-
-          echo load image
-          docker load -i ${image}
-
-          echo run image
-          docker run ${image.destNameTag} tar -C /home/esp -c . | tar -xv --no-same-owner -C $out || true
-
-          echo end
-          kill %1
-        ''
-      );
   in {
     packages.x86_64-linux.esp32 = pkgs.stdenv.mkDerivation {
       name = "esp32";
-      src = extractDocker esp32;
+      src = esp32;
+      unpackPhase = ''
+        mkdir -p source
+        tar -C source -xvf $src
+      '';
+      sourceRoot = "source";
       nativeBuildInputs = [
         pkgs.autoPatchelfHook
+        pkgs.jq
       ];
       buildInputs = [
         pkgs.xz
@@ -74,11 +36,18 @@
         pkgs.libudev-zero
         pkgs.stdenv.cc.cc
       ];
-      buildPhase = "true";
+      buildPhase = ''
+        jq -r '.[0].Layers | @tsv' < manifest.json > layers
+      '';
       installPhase = ''
         mkdir -p $out
-        cp -r $src/.cargo $out
-        cp -r $src/.rustup $out
+        for i in $(< layers); do
+          tar -C $out -xvf "$i" home/esp/.cargo home/esp/.rustup || true
+        done
+        mv -t $out $out/home/esp/{.cargo,.rustup}
+        rmdir $out/home/esp
+        rmdir $out/home
+        # [ -d $out/.cargo ] && [ -d $out/.rustup ]
       '';
     };
   };
