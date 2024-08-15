@@ -32,7 +32,7 @@
         pkgs.xz
         pkgs.zlib
         pkgs.libxml2
-        pkgs.python2
+        pkgs.python3
         pkgs.libudev-zero
         pkgs.stdenv.cc.cc
       ];
