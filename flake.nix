@@ -33,7 +33,6 @@
         pkgs.zlib
         pkgs.libxml2
         pkgs.python2
-        pkgs.python312Packages.find-libpython
         pkgs.libudev-zero
         pkgs.stdenv.cc.cc
       ];
