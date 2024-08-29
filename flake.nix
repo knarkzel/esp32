@@ -11,7 +11,7 @@
     esp32 = pkgs.dockerTools.pullImage {
       imageName = "espressif/idf-rust";
       imageDigest = "sha256:0e1fba439a7d4cee57c5822feda8cd09ec38d55b40e402273d5c10477e53ddd4";
-      sha256 = "Y8l8B73V+4neNaL3tk0cHkDYW4bWOgTjIRO2fD4Kacw=";
+      sha256 = "rUumcjsV3rKmQeGpMK93srfuQpf4OMXvbqTszJa2BXg=";
       finalImageName = "espressif/idf-rust";
       finalImageTag = "all_latest";
     };
