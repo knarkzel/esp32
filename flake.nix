@@ -47,6 +47,9 @@
         mv -t $out $out/home/esp/{.cargo,.rustup}
         rmdir $out/home/esp
         rmdir $out/home
+        export PATH=$out/.rustup/toolchains/esp/bin:$PATH
+        export PATH=$out/.rustup/toolchains/esp/xtensa-esp-elf-esp-13.2.0_20230928/stensa-esp-elf/bin:$PATH
+
         # [ -d $out/.cargo ] && [ -d $out/.rustup ]
       '';
     };
