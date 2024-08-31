@@ -49,6 +49,7 @@
         rmdir $out/home
         export PATH=$out/.rustup/toolchains/esp/bin:$PATH
         export PATH=$out/.rustup/toolchains/esp/xtensa-esp-elf-esp-13.2.0_20230928/stensa-esp-elf/bin:$PATH
+        export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 
         # [ -d $out/.cargo ] && [ -d $out/.rustup ]
       '';
