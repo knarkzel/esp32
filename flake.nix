@@ -10,8 +10,8 @@
     pkgs = nixpkgs.legacyPackages.x86_64-linux;
     esp32 = pkgs.dockerTools.pullImage {
       imageName = "espressif/idf-rust";
-      imageDigest = "sha256:4d6ca6c1764225eb07374fb3c0584696bf0e9483abf04d075db27b60bc3e3d49";
-      sha256 = "Y8l8B73V+4neNaL3tk0cHkDYW4bWOgTjIRO2fD4Kacw=";
+      imageDigest = "sha256:0e1fba439a7d4cee57c5822feda8cd09ec38d55b40e402273d5c10477e53ddd4";
+      sha256 = "rUumcjsV3rKmQeGpMK93srfuQpf4OMXvbqTszJa2BXg=";
       finalImageName = "espressif/idf-rust";
       finalImageTag = "all_latest";
     };
@@ -32,7 +32,7 @@
         pkgs.xz
         pkgs.zlib
         pkgs.libxml2
-        pkgs.python2
+        pkgs.python3
         pkgs.libudev-zero
         pkgs.stdenv.cc.cc
       ];
@@ -47,6 +47,10 @@
         mv -t $out $out/home/esp/{.cargo,.rustup}
         rmdir $out/home/esp
         rmdir $out/home
+        export PATH=$out/.rustup/toolchains/esp/bin:$PATH
+        export PATH=$out/.rustup/toolchains/esp/xtensa-esp-elf-esp-13.2.0_20230928/stensa-esp-elf/bin:$PATH
+        export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+
         # [ -d $out/.cargo ] && [ -d $out/.rustup ]
       '';
     };
